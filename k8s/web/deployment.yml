@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: demo-web
+  name: demo-web
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: demo-web
+    spec:
+      containers:
+      - args:
+        - ruby
+        - app.rb
+
+        image: registry.hub.docker.com/ferperales/sinatra-demo:0.0.5
+        name: demo-web
+        ports:
+        - containerPort: 4567
+        resources: {}
+        volumeMounts:
+        - mountPath: /home/app
+          name: demo-web-storage
+      restartPolicy: Always
+      volumes:
+      - name: demo-web-storage
+        persistentVolumeClaim:
+          claimName: demo-web-claim
+
+
